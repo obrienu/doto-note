@@ -19,7 +19,7 @@ mongoose
 app.use("/api/todo", todoRoute);
 
 //serve static file while app is in production
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
 
   app.get("*", (req, res) => {
