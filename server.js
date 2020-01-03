@@ -17,15 +17,17 @@ mongoose
 
 //Get Items Route
 app.use("/api/todo", todoRoute);
+console.log(process.env);
+
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "/client/build/index.html"));
+});
 
 //serve static file while app is in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "./client/build")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "./client/build/index.html"));
-  });
-}
+//if (process.env.NODE_ENV === "development") {
+//}
 
 const port = process.env.PORT || 5050;
 
