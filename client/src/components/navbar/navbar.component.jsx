@@ -23,7 +23,10 @@ const NavigationBar = () => {
           <Collapse isOpen={isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem className="float-right">
-                <NavLink target="blank" href="https://github.com/obrienu">
+                <NavLink
+                  target="blank"
+                  href="https://github.com/obrienu/doto-note"
+                >
                   GitHub
                 </NavLink>
               </NavItem>
