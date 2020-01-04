@@ -2,14 +2,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const todoRoute = require("./routes/api/items.route");
+const userRoute = require("./routes/api/user.route");
 const path = require("path");
+const config = require("config");
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 //mongoose connect
-const dbUrl = require("./config/keys").mongoURI;
+let dbUrl;
+
+if (process.env.NODE_ENV === "production") {
+  dbUrl = config.get("mongoURI");
+} else {
+  dbUrl = config.get("mongoURILocal");
+}
+
 mongoose
   .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("APP CONNECTED TO MONGOOSE ATLAS"))
@@ -17,6 +26,7 @@ mongoose
 
 //Get Items Route
 app.use("/api/todo", todoRoute);
+app.use("/api/user", userRoute);
 
 //serve static file while app is in production
 if (process.env.NODE_ENV === "production") {

@@ -1,0 +1,5 @@
+{
+  "mongoURILocal": "'mongodb://localhost:27017/todo_app",
+  "mongoURI": "mongodb+srv://Neirles:todo_app@cluster0-s6xli.mongodb.net/todo_app?retryWrites=true&w=majority",
+  "secretkey": "this is a long string meant to make login and authentication difficult"
+}

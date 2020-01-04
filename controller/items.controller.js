@@ -21,7 +21,7 @@ exports.getTodoById = (req, res) => {
 //Post new tasks
 exports.postTodos = (req, res) => {
   const task = req.body.task;
-  const description = req.body.task;
+  const description = req.body.description;
   const todo = new Todo({
     task,
     description
