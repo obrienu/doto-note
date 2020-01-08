@@ -6,9 +6,11 @@ const config = require("config");
 const secretKey = config.get("secretkey");
 
 exports.registerUser = (req, res) => {
-  const { name, password, email } = req.body;
-  if (!email || !name || !password)
+  const { name, password, cpassword, email } = req.body;
+  if (!email || !name || !password || !cpassword)
     return res.status(400).json("Please Enter All Fields");
+  if (password !== cpassword)
+    return res.status(400).json("Password and Cpassword must be the same");
   const newUser = new User({
     name,
     email,
