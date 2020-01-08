@@ -77,7 +77,11 @@ export class LoginModal extends Component {
           Login
         </NavLink>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
+        <Modal
+          style={{ marginTop: "4rem" }}
+          isOpen={this.state.modal}
+          toggle={this.toggle}
+        >
           <ModalHeader toggle={this.toggle}>Login</ModalHeader>
           <ModalBody>
             {this.state.msg ? (

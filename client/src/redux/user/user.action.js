@@ -6,7 +6,10 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  AUTH_ERROR
+  AUTH_ERROR,
+  ADD_NOTE,
+  LOADING_NOTE,
+  NOTES_LOADED
 } from "./user.type";
 
 import axios from "axios";
@@ -21,14 +24,15 @@ export const getUser = () => (dispatch, getState) => {
   //const config = getHeaderConfig(getState);
   axios
     .get("/api/user", getHeaderConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: USER_LOADED,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err => {
-      dispatch(getError(err.response.data.msg, err.response.status));
+      getError(err.response.data, err.response.status);
+
       dispatch({
         type: AUTH_ERROR
       });
@@ -72,11 +76,11 @@ export const userLogin = ({ email, password }) => (dispatch, getState) => {
   axios
     .post("/api/user/login", body, config)
     .then(res => {
-      dispatch(clearError());
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       });
+      dispatch(clearError());
     })
     .catch(err => {
       dispatch(
@@ -93,4 +97,72 @@ export const userLogout = () => dispatch => {
   dispatch({
     type: LOGOUT_SUCCESS
   });
+};
+
+export const addNote = task => (dispatch, getState) => {
+  dispatch({
+    type: LOADING_NOTE
+  });
+  axios
+    .post(`/api/user/posts`, task, getHeaderConfig(getState))
+    .then(res =>
+      dispatch({
+        type: ADD_NOTE,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      getError(err.response.data.msg, err.response.status, "ADD NOTE ERROR");
+    });
+};
+
+export const getNotes = () => (dispatch, getState) => {
+  dispatch({
+    type: LOADING_NOTE
+  });
+  axios
+    .get(`/api/user/posts`, getHeaderConfig(getState))
+    .then(res =>
+      dispatch({
+        type: NOTES_LOADED,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      getError(err, 400, "GET NOTE ERROR");
+    });
+};
+
+export const deleteNotes = noteId => (dispatch, getState) => {
+  dispatch({
+    type: LOADING_NOTE
+  });
+  axios
+    .delete(`/api/user/posts/` + noteId, getHeaderConfig(getState))
+    .then(res =>
+      dispatch({
+        type: NOTES_LOADED,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      getError(err.response.data.msg, err.response.status, "DELETE NOTE ERROR");
+    });
+};
+
+export const editNote = (noteId, note) => (dispatch, getState) => {
+  dispatch({
+    type: LOADING_NOTE
+  });
+  axios
+    .patch(`/api/user/posts/` + noteId, note, getHeaderConfig(getState))
+    .then(res =>
+      dispatch({
+        type: NOTES_LOADED,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      getError(err.response.data.msg, err.response.status, "EDIT NOTE ERROR");
+    });
 };

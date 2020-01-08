@@ -14,3 +14,13 @@
   opacity: 0.01;
   transition: opacity ease-in 1000ms;
 }
+
+.todoContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.todoContainer {
+  display: flex;
+  flex-flow: row nowrap;
+}

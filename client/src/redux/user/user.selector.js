@@ -13,3 +13,10 @@ export const isAuthenticatedSelector = createSelector(
   [UserSelector],
   user => user.isAuthenticated
 );
+
+export const isLoadingSelector = createSelector(
+  [UserSelector],
+  user => user.isLoading
+);
+
+export const notesSelector = createSelector([UserSelector], user => user.notes);

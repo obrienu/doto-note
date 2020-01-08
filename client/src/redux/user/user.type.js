@@ -6,3 +6,7 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
 export const AUTH_ERROR = "AUTH_ERROR";
+export const ADD_NOTE = "ADD_NOTE";
+export const DELETE_NOTE = "DELETE_NOTE";
+export const LOADING_NOTE = "LOADING_NOTE";
+export const NOTES_LOADED = "NOTES_LOADED";

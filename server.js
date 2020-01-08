@@ -1,7 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const todoRoute = require("./routes/api/items.route");
 const userRoute = require("./routes/api/user.route");
 const path = require("path");
 const config = require("config");
@@ -25,7 +23,7 @@ mongoose
   .catch(error => console.log("CANNOT CONNECT TO MONGO ATLAS: ", error));
 
 //Get Items Route
-app.use("/api/todo", todoRoute);
+
 app.use("/api/user", userRoute);
 
 //serve static file while app is in production

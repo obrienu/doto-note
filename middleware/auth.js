@@ -9,7 +9,9 @@ const auth = (req, res, next) => {
 
   try {
     //Verify token
-    const decoded = jwt.verify(token, config.get("secretkey"));
+    const secretKey = process.env.SECRETKEY || config.get("secretkey");
+
+    const decoded = jwt.verify(token, secretKey);
 
     //Add user from payload
     req.user = decoded;

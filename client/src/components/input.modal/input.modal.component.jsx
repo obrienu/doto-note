@@ -10,7 +10,9 @@ import {
   Input
 } from "reactstrap";
 import { connect } from "react-redux";
-import { addTask } from "../../redux/task/task.actions";
+import { addNote } from "../../redux/user/user.action";
+import { createStructuredSelector } from "reselect";
+import { userDataSelector } from "../../redux/user/user.selector";
 
 export class InputModal extends Component {
   state = {
@@ -27,12 +29,13 @@ export class InputModal extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { addTask } = this.props;
+    const { addNote, user } = this.props;
     const { task, description } = this.state;
-    addTask({
+    const body = {
       task,
       description
-    });
+    };
+    addNote(body, user.id);
     this.toggle();
     this.setState({
       task: "",
@@ -57,19 +60,23 @@ export class InputModal extends Component {
           Add Note
         </Button>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
+        <Modal
+          style={{ marginTop: "4rem" }}
+          isOpen={this.state.modal}
+          toggle={this.toggle}
+        >
           <ModalHeader toggle={this.toggle}>Add New Note</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
-                <Label htmlFor="task">Task</Label>
+                <Label htmlFor="task">Note</Label>
                 <Input
                   id="task"
                   type="text"
                   onChange={this.handleChange}
                   value={this.state.task}
                   name="task"
-                  placeholder="Enter Task"
+                  placeholder="Enter Note"
                   required
                 />
               </FormGroup>
@@ -77,7 +84,7 @@ export class InputModal extends Component {
                 <Label htmlFor="description">Description</Label>
                 <Input
                   id="description"
-                  type="text"
+                  type="textarea"
                   onChange={this.handleChange}
                   value={this.state.description}
                   name="description"
@@ -96,8 +103,12 @@ export class InputModal extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  addTask: task => dispatch(addTask(task))
+const mapStateToProps = createStructuredSelector({
+  user: userDataSelector
 });
 
-export default connect(null, mapDispatchToProps)(InputModal);
+const mapDispatchToProps = dispatch => ({
+  addNote: task => dispatch(addNote(task))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(InputModal);

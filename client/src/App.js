@@ -8,18 +8,17 @@ import FormModal from "./components/input.modal/input.modal.component";
 import Loader from "./components/loading.wrapper/loading.wrapper.component";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { selectLoading, selectError } from "./redux/task/task.selector";
-import { getTask } from "./redux/task/task.actions";
-import { getUser } from "./redux/user/user.action";
+import { isLoadingSelector } from "./redux/user/user.selector";
+import { getUser, getNotes } from "./redux/user/user.action";
 import { isAuthenticatedSelector } from "./redux/user/user.selector";
 
 const TodoListWithSpinner = Loader(TodoList);
 
 class App extends Component {
   componentDidMount() {
-    const { getTask, getUser } = this.props;
+    const { getUser, getNotes } = this.props;
     getUser();
-    getTask();
+    getNotes();
   }
 
   render() {
@@ -44,12 +43,11 @@ class App extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  isLoading: selectLoading,
-  error: selectError,
+  isLoading: isLoadingSelector,
   isAuthenticated: isAuthenticatedSelector
 });
 const mapDispatchToProps = dispatch => ({
-  getTask: () => dispatch(getTask()),
-  getUser: () => dispatch(getUser())
+  getUser: () => dispatch(getUser()),
+  getNotes: () => dispatch(getNotes())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

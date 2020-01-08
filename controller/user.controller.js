@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-const secretKey = config.get("secretkey");
+const secretKey = process.env.SECRETKEY || config.get("secretkey");
 
 exports.registerUser = (req, res) => {
   const { name, password, cpassword, email } = req.body;
@@ -79,17 +79,19 @@ exports.login = (req, res) => {
         secretKey,
         { expiresIn: 3600 },
         (err, token) => {
-          if (err)
+          if (err) {
             return res.status(400).json({ msg: "Cannot sign user token" });
-
-          res.json({
-            token,
-            user: {
-              name: user.name,
-              id: user._id,
-              email: user.email
-            }
-          });
+          } else {
+            res.json({
+              token,
+              user: {
+                name: user.name,
+                id: user._id,
+                email: user.email
+              },
+              notes: [...user.notes]
+            });
+          }
         }
       );
     });
@@ -98,7 +100,64 @@ exports.login = (req, res) => {
 
 exports.getUser = (req, res) => {
   User.findById(req.user.id)
-    .select("-password")
-    .then(user => res.json(user))
-    .catch(err => res.status(400).json({ msg: err }));
+    .select("-password, -notes")
+    .then(user => {
+      return res.json(user);
+    })
+    .catch(err => res.status(400).json({ msg: "Cannot get user" }));
+};
+
+exports.getNotes = (req, res) => {
+  User.findById(req.user.id)
+    .select("notes")
+    .then(user => {
+      return res.json(user.notes);
+    })
+    .catch(err => res.status(400).json({ msg: "Cannot get notes" }));
+};
+
+exports.addNote = (req, res) => {
+  const { task, description } = req.body;
+  User.findById(req.user.id)
+    .then(user => {
+      user.notes.unshift({ task, description });
+      user
+        .save()
+        .then(user => res.json(user.notes))
+        .catch(err => res.status(400).json({ msg: "Note not saved" }));
+    })
+    .catch(err => res.status(400).json({ msg: "User does not exist" }));
+};
+
+exports.deleteNote = (req, res) => {
+  const noteId = req.params.noteId;
+  User.findById(req.user.id)
+    .then(user => {
+      user.notes = user.notes.filter(note => note.id !== noteId);
+      user
+        .save()
+        .then(user => res.json(user.notes))
+        .catch(err =>
+          res.status(400).json({ msg: "Note could not be deleted" })
+        );
+    })
+    .catch(err => res.status(400).json({ msg: "User does not exist" }));
+};
+
+exports.editNote = (req, res) => {
+  const noteId = req.params.noteId;
+  const body = req.body;
+  User.findById(req.user.id)
+    .then(user => {
+      user.notes = user.notes.map(note =>
+        noteId == note._id ? { ...body } : note
+      );
+      user
+        .save()
+        .then(user => res.json(user.notes))
+        .catch(err =>
+          res.status(400).json({ msg: "Note could not be edited" })
+        );
+    })
+    .catch(err => res.status(400).json({ msg: "User does not exist" }));
 };

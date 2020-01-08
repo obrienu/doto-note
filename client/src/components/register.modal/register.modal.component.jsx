@@ -89,7 +89,11 @@ export class RegisterModal extends Component {
           Register
         </NavLink>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
+        <Modal
+          style={{ marginTop: "4rem" }}
+          isOpen={this.state.modal}
+          toggle={this.toggle}
+        >
           <ModalHeader toggle={this.toggle}>Register</ModalHeader>
           <ModalBody>
             {msg ? <Alert color="danger">{msg}</Alert> : null}
