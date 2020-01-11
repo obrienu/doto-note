@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-const secretKey = process.env.SECRETKEY || config.get("secretkey");
+const secretKey = process.env.SECRET_KEY || config.get("secretkey");
 
 exports.registerUser = (req, res) => {
   const { name, password, cpassword, email } = req.body;

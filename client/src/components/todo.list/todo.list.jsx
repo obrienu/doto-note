@@ -23,7 +23,7 @@ export class TodoList extends Component {
                     style={{ marginRight: "1rem" }}
                     onClick={() => deleteNotes(_id)}
                   >
-                    &times;
+                    <i className="fas fa-trash-alt"></i>
                   </Button>
                   <div
                     style={{
